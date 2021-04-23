@@ -87,7 +87,7 @@ const char game_help[1300] = "\tI know of places, actions, and things.Most of my
 	Also, note that cave passages turn a lot, and that leaving a room to\n\
 	the north does not guarantee entering the next from the south.Good luck!\0";
 
-//const char long_game_help[2000] = "\
+const char long_game_help[2000] = "\
   I know of places, actions, and things. Most of my vocabulary describes\n\
   placesand is used to move you there.To move, try words like forest,\n\
   building, downstream, enter, east, west, north, south, up, or down.I\n\

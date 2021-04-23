@@ -18,6 +18,7 @@
 
 #define INVENTORY_LIMIT 10
 #define MAX_VERBS 10
+#define GAMEVERSION 2
 
 /* Location Dictionay
 LOC_START:
