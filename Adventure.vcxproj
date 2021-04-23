@@ -21,15 +21,14 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\GCU Files\sqlite-amalgamation-3350400\sqlite-amalgamation-3350400\sqlite3.c" />
     <ClCompile Include="Adeventure.c" />
-    <ClCompile Include="ccaves.c" />
-    <ClCompile Include="CC_Structs.c" />
+    <ClCompile Include="CC_Structs.h" />
+    <ClCompile Include="colosalcaveadv.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Week 1\Collosal Caves\open-adventure-master\open-adventure-master\adventure.yaml" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\GCU Files\sqlite-amalgamation-3350400\sqlite-amalgamation-3350400\sqlite3.h" />
-    <ClInclude Include="colosalcaveadv.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
