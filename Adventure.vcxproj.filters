@@ -13,19 +13,22 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="3rd Party">
+      <UniqueIdentifier>{c42ef11d-ee54-4f0a-b936-746389ef8525}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Adeventure.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\GCU Files\sqlite-amalgamation-3350400\sqlite-amalgamation-3350400\sqlite3.c">
-      <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="ccaves.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="CC_Structs.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite-amalgamation-3350500\sqlite3.c">
+      <Filter>3rd Party</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +42,12 @@
     </ClInclude>
     <ClInclude Include="colosalcaveadv.c">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite-amalgamation-3350500\sqlite3.h">
+      <Filter>3rd Party</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite-amalgamation-3350500\sqlite3ext.h">
+      <Filter>3rd Party</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
