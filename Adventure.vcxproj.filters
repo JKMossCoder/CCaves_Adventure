@@ -18,13 +18,10 @@
     <ClCompile Include="Adeventure.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\GCU Files\sqlite-amalgamation-3350400\sqlite-amalgamation-3350400\sqlite3.c">
-      <Filter>Resource Files</Filter>
+    <ClCompile Include="CC_Structs.h">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ccaves.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CC_Structs.c">
+    <ClCompile Include="colosalcaveadv.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,13 +29,5 @@
     <None Include="..\..\..\Week 1\Collosal Caves\open-adventure-master\open-adventure-master\adventure.yaml">
       <Filter>Resource Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\GCU Files\sqlite-amalgamation-3350400\sqlite-amalgamation-3350400\sqlite3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="colosalcaveadv.c">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
