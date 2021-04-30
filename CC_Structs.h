@@ -59,36 +59,30 @@ struct Location init(int);
 
 
 /* Structure Definations */
-struct Verbs {
-	int id;
-	int travelID; //location this travel BELONGS to	
-	int numVerbs; //how many verb objects for this loc
-	char action[6]; //speak  or goto
-	char destination[10]; //readable location name	
-	verb _verb[MAX_VERBS];
+struct TravelCond {
+	int tcId;
+	int verbSetId;
+	int travelid;
+	verb c_verb;
+	//cond:    [not, GRATE, GRATE_CLOSED], action :[goto, LOC_GRATE]
+	//cond:    [pct, 65],                  action: [speak, FUTILE_CRAWL]
+	//cond:    [carry, CLAM],              action :[speak, CLAM_BLOCKER]
+	//cond:    ["with", SNAKE],            action: [goto, LOC_SNAKEBLOCK]
+	char obj[10];
+	char objCondition[20];
+	char action[10];
+	char destination[15];
 };
 
-struct Travel {
-
-	int travelID;
-	int locID; //what location is this travel dict for?		
-	int numVerbSets;
-	struct Verbs t_verbs[MAX_VERBS]; //this travel verbset
+struct VerbSet {
+	int verbSetId;
+	int travelID;			//location this travel BELONGS to	
+	int numVerbs;			//how many verb objects for this loc
+	int numCond;
+	verb vrbs[MAX_VERBS];
+	struct TravelCond tc[10];
 };
-
-/* TRAVEL Structure
-	USAGE:
-
-	struct Verbs myVerb;
-	myVerb.id = 1;
-	myVerb.numVerbs = 3;
-	strcpy_s(myVerb.action, 5, "goto");
-	strcpy_s(myVerb.destination, 9, "LOC_HILL");
-	strcpy_s(myVerb._verbs[0], 5, "ROAD");
-	strcpy_s(myVerb._verbs[1], 5, "WEST", 5);
-	strcpy_s(myVerb._verbs[2], 6, "UPWAR", 6);
-
-*/
+//e.g. {1, 1, 3, action:'goto', dest:'LOC_BUILDING', verbs:['ENTER','UOWAR','WEST']};
 
 struct Conditions
 {
@@ -98,14 +92,30 @@ struct Conditions
 	bool value;			//true or false
 };
 
+struct Travel {
+	int travelId;
+	int locID;
+	int numVerbs;
+	char action[7];
+	char dest[15];		
+	char verbs[MAX_VERBS][6];
+	//struct VerbSet t_verb[MAX_VERBS];	
+};
+//e.g. {tid:1, locid:1, numVerbss: 3, action:'goto', dest:'LOC_BUILDING', 
+// verbs:['ENTER','UOWAR','WEST']};
+// {1, 1, 3, 0, {}, {"ENTER","UPWAR","WEST"}
+//struct verbs: vid, tid, numverbs, numconditions, vervs[]
+
+
 struct Location {
 	int locID;
+	int numTSets;
 	char locName[13];
 	char longDescsription[500];
 	char shoertDescsription[250];
-	char sound[100];
+	char sound[100];	
 	struct Conditions locConditions[3];
-	//struct Travel locTraveel[MAX_VERBS];  // dictioinary verbsand actionsl
+	struct Travel locTravel[MAX_VERBS];  // dictioinary verbsand actionsl
 };
 
 /*
@@ -147,46 +157,89 @@ struct Location init(int lID)
 	//lID = Location_ID of the location I want to display
 	struct Location locs[10]; //array of 10 locations max for this phase
 
-	struct Location loc_Start = { 1, "LOC_START",
-		"\t\tYou are standing at the end of a road before a small brick building.\n\r\
-		Around you is a forest.A small stream flows out of the building and\n\r\
-		down a gully.",
-		"You are standing next to a building",
+	struct Location loc_Start = { 1, 3, "LOC_START",		
+	"\tYou are standing at the end of a road before a small brick building.\n\r\
+	Around you is a forest.A small stream flows out of the building and\n\r\
+	down a gully.",
+	"You are standing next to a building",
 		"GURGLE",
 		{
 			{1, 1, "LIT", true},
 			{2, 1, "FLUID", true},
 			{3, 1, "ABOVE", true}
-		}
+		}, 		
+		{
+			{1, 1, 3, "goto", "LOC_HILL", {"WEST","ROAD","UPWAR"}},//{1, 1, 3, 0, {"WEST","ROAD","UPWAR"}}},
+			{2, 1, 1, "goto", "LOC_GRATE", {"DEPRE"}},//{2, 2, 1, 0, {"DEPRE"}}},
+			{3, 1, 1,"speak", "WHICH_WAY", {"DOWN"}}//{3, 3, 1, 0, {"DOWN"}}}
+		},
 	};
 
 	locs[0] = loc_Start;
 
-	struct Location loc_Hill = { 2, "LOC_HILL",
-	"\n\
-	 You have walked up a hill, still in the forest.  The road slopes back\n\
-		  down the other side of the hill.There is a building in the distance.",
+	struct Location loc_Hill = { 2, 5, "LOC_HILL",
+	"\tYou have walked up a hill, still in the forest.  The road slopes back\n\
+	down the other side of the hill.There is a building in the distance.",
 	"You are on a hill",
 	"none",
 	{
-		{1, 1, "LIT", true},
-		{2, 1, "FLUID", true},
-		{3, 1, "ABOVE", true}
-	}
+		{4, 2, "LIT", true},		
+		{5, 2, "ABOVE", true}
+	},
+	{		
+		{4, 2, 2, "goto", "LOC_START", {"BUILD", "EAST"}},
+		{5, 2, 1, "goto", "LOC_ROADEND", {"WEST"}},
+		{6, 2, 1, "goto", "LOC_FOREST20", {"NORTH"}},
+		{7, 2, 2, "goto", "LOC_FOREST13", {"SOUTH", "FORES"}},
+		{8, 2, 1, "speak", "WHICH_WAY", "DOWN"}}
 	};
 	locs[1] = loc_Hill;
 
-	struct Location loc_Building = { 3, "LOC_BUILDING",
-	"You are inside a building, a well house for a large spring.\n",
-	"You are on a hill\n",
+	struct Location loc_Building = { 3, 4, "LOC_BUILDING",
+	"\tYou are inside a building, a well house for a large spring.\n",
+	"\tYou are on a hill\n",
 	"none",
 	{
-		{1, 1, "LIT", true},
-		{2, 1, "FLUID", true},
-		{3, 1, "ABOVE", true}
+		{6, 3, "LIT", true},
+		{7, 3, "FLUID", true},
+		{8, 3, "ABOVE", true}
+	},
+	{
+		{ 9, 3, 3, "goto", "LOC_START", {"OUT", "OUTDO", "WEST"}},
+		{10, 3, 1,"goto", "LOC_FOOF1", {"XYZZY"}},
+		{11, 3, 1,"goto", "LOC_FOOF3", {"PLUGH"}},
+		{12, 3, 2,"goto", "LOC_SEWER", {"DOWNS", "STREA"}}
 	}
 	};
 	locs[2] = loc_Building;
+	/*
+	struct Location LOC_GRATE = { 4, 7, "LOC_GRATE",
+	"\tYou are in a 20 - foot depression floored with bare dirt.Set into the\n\
+	dirt is a strong steel grate mounted in concrete.A dry streambed\n\
+	leads into the depression.\0",
+	"You''re outside grate.",
+	"none",		
+		{
+			{ 9, 4, "LIT", true},
+			{10, 4, "ABOVE", true}
+		},
+		//hints: [*grate, *jade]
+		{
+			{13, 4, 2, "goto", "LOC_FOREST7", {"EAST", "FORES"}},
+			{14, 4, 1,  "goto","", {"SOUTH"}},
+			{15, 4, 1,  "goto", "LOC_FOREST9", {"WEST" }},
+			{16, 4, 1, "goto", "LOC_START9", {"BUILD"}},
+			{17, 4, 3, "goto", "LOC_SLIT", {"UPSTR", "GULLY", "NORTH"}},
+			{18, 4, 3, "goto", "LOC_BELOWGRATE", {"ENTER", "INWAR", "DOWN"},
+				//verbset
+				{25, 18, 3, 1, {"ENTER", "INWAR", "DOWN"},
+					//travelcondition
+					{0, 0, 0, "not", "GRATE", "GRATE_CLOSED", "goto", "LOC_BELOWGRATE"}
+				}
+			},
+			{19, 4, 1,  "speak", "GRATE_NOWAY", {"ENTER"}},
+		}
+	}; */
 
 	return locs[lID - 1];
 }
