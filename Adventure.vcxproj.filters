@@ -18,13 +18,19 @@
     <ClCompile Include="Adeventure.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\GCU Files\sqlite-amalgamation-3350400\sqlite-amalgamation-3350400\sqlite3.c">
-      <Filter>Resource Files</Filter>
+    <ClCompile Include="CC_Structs.h">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ccaves.c">
-      <Filter>Resource Files</Filter>
+    <ClCompile Include="ColosalCaveAdv.h">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CC_Structs.c">
+    <ClCompile Include="CCaveStrings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CCavesSQL.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,10 +40,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\GCU Files\sqlite-amalgamation-3350400\sqlite-amalgamation-3350400\sqlite3.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="CCaveStrings.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="colosalcaveadv.c">
+    <ClInclude Include="sqlite3.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
