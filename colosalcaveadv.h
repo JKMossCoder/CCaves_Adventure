@@ -15,6 +15,8 @@
 * future phases of the project
 * *************************************************************
 */
+#define HELP_LINES 20
+
 const char* SPLASH_SCREEN = "\tWelcome to ADVENTURE! \n\
 	\n\
 	Original development by Willie Crowther \n\

@@ -20,11 +20,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Adeventure.c" />
+    <ClCompile Include="CCavesSQL.c" />
+    <ClCompile Include="CCaveStrings.c" />
     <ClCompile Include="CC_Structs.h" />
-    <ClCompile Include="colosalcaveadv.h" />
+    <ClCompile Include="ColosalCaveAdv.h" />
+    <ClCompile Include="sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Week 1\Collosal Caves\open-adventure-master\open-adventure-master\adventure.yaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CCaveStrings.h" />
+    <ClInclude Include="sqlite3.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

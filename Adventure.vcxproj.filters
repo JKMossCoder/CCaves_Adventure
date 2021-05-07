@@ -21,7 +21,16 @@
     <ClCompile Include="CC_Structs.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="colosalcaveadv.h">
+    <ClCompile Include="ColosalCaveAdv.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CCaveStrings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CCavesSQL.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,5 +38,13 @@
     <None Include="..\..\..\Week 1\Collosal Caves\open-adventure-master\open-adventure-master\adventure.yaml">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CCaveStrings.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

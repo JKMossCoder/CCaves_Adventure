@@ -31,8 +31,10 @@
 #include <Windows.h>
 
 /* custom header files */
-#include "colosalcaveadv.h"
+#include "ColosalCaveAdv.h"
 #include "CC_Structs.h"
+#include "CCaveStrings.h"
+
 
 /* function prototypes: */
 int  m2(int x, int y);               
@@ -47,19 +49,26 @@ void getHelp();
 bool intro = false; //to prevent intro from re-firing
 int c, retVal = 0, j = 0;
 char ch, input[80];
-char ch, input[80];
+char* version;
+extern int getCCVersion();
+struct Location activeLocation;
 
 /* Begin Main Function */
 int main(void) {
 
 	//Define local variables
 	bool valid = 1, notUnderstood = false;
-
+	
+	int d = openDB("CCave.db");	
+	int rc = getCCVersion();
+	closeDB();
 
 	loadPlayer();
+	//int b = initBuilding();
 	//we are at the start. initilize location 
 	//structure to loc_start
-	struct Location activeLocation = init(1);
+	activeLocation = *chkPtr(1); //init(1);
+	//activeLocation = &ptrBldg;
 
 	drawScreen(false, "Press any key to continuee. >", SPLASH_SCREEN);		//draws top and bottom banners
 
@@ -67,29 +76,39 @@ int main(void) {
 
 	do
 	{
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-		retVal = m2(0, 5);
-		drawScreen(false, "Do you need instructions? > ", introtext);
-		retVal = m2(2, 24);
-		printf("Press (Y)es, (N)o, (Q)uit or ((H)elp *or ?)");
-		retVal = m2(31, 25);
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 30);
-
-		//retVal = m2(31, 25);
-		//Get input, yes, no, help or quit only
-		
 		int rVal = 0;
 		do
 		{
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+			retVal = m2(0, 5);
+			drawScreen(false, "Do you need instructions? > ", introtext);
+			retVal = m2(2, 24);
+			printf("Press (Y)es, (N)o, (Q)uit or ((H)elp *or ?)");
+			//printf(" | Version: %s", getCCVersion());
+			if (notUnderstood) {
+				retVal = m2(2, 26);
+				printf("I'm sorry, I didn't underwstand that.");
+				notUnderstood = false;
+			}
 			retVal = m2(31, 25);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 30);
-			fflush(stdin);			
-			rVal = scanf_s(" %[^\n]%*c", &input, (unsigned)sizeof(input)); 
-			getchar();
+
+			//retVal = m2(31, 25);
+			//Get input, yes, no, help or quit only
+
+			retVal = m2(31, 25);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 30);
+			fflush(stdin);
+			//rVal = scanf_s(" %[^\n]%*c", &input, (unsigned)sizeof(input)); 
+			rVal = getString(input);
+			if (rVal == 0) {
+				notUnderstood = true;
+			}
 		} while (rVal == 0);
 		//change input to all lower case			
 		makeLCase(&input, strlen(input));
-		
+		notUnderstood = false;
+
 		if (
 			strcmp(input, "n") == 0 || strcmp(input, "no") == 0 ||
 			strcmp(input, "y") == 0 || strcmp(input, "yes") == 0 ||
@@ -103,29 +122,37 @@ int main(void) {
 			{
 				do
 				{
-					//No instructtions, so move to first location (loc_start)
-					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-					retVal = m2(0, 5);
-					drawScreen(true, "What's next? > ", activeLocation.longDescsription);
-					retVal = m2(2, 24);
-					printf("Enter BUILD, START, HILL ie (Q)uit or ((H)elp *or ?)");
-					if (notUnderstood) {
-						retVal = m2(2, 26);
-						printf("I'm sorry, I don't underwstand that.");							
-						notUnderstood = false;
-					}
-					retVal = m2(15, 25);
-					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 30);
-					strcpy_s(input,1,"\0");
-					fflush(stdin);
-					retVal = scanf_s("%[^\n]%*c", &input, sizeof(input));
+					rVal = 0;
+					do
+					{
+						//No instructtions, so move to first location (loc_start)
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+						retVal = m2(0, 5);						
+						drawScreen(!notUnderstood, "What's next? > ", activeLocation.longDescsription);
+						retVal = m2(2, 24);
+						printf("Enter BUILD, START, HILL ie (Q)uit or ((H)elp *or ?)");
+						if (notUnderstood) {
+							retVal = m2(2, 26);
+							printf("I'm sorry, I don't underwstand that.");
+							notUnderstood = false;
+						}
+						retVal = m2(15, 25);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 30);
+						//strcpy_s(input,1,"\0");
+						fflush(stdin);
+						//retVal = scanf_s("%[^\n]%*c", &input, sizeof(input));
+						rVal = getString(input);
+						if (rVal == 0) {
+							notUnderstood = true;
+						}
+					} while (rVal == 0);
 					makeLCase(&input, strlen(input));
 
 					//activeLocation = lone.locID;
 					
 					retVal = readVerbs(input, activeLocation);
-					if (retVal > 0)
-						activeLocation = init(retVal);
+					if (retVal > 0)						
+						activeLocation =  *chkPtr(retVal);//init(retVal);
 					else if (retVal == -2)
 						return 0; //we are ending gaame...		
 					else if (retVal == -1) {
@@ -188,10 +215,12 @@ int m2(int x, int y) {
 void drawScreen(bool TType, char prompt[81], char strDisplay[2000])
 {	
 	char* myString;
+		
 	myString = strDisplay;
+	
 	//this function is called each time we move
 	//or otherwise need to write to the screen
-
+		
 	//1. clear the screen
 	system("cls");
 
@@ -200,7 +229,7 @@ void drawScreen(bool TType, char prompt[81], char strDisplay[2000])
 	for (int j = 1; j <= 15; j++) {
 		printf(" ");
 	}
-	printf("Colossol Caves Adventure  |  Score: %d |  Turns %d", plrOne.score, plrOne.curTurn);
+	printf("Colossol Caves Adventure  |  Score: %d |  Turns %d | Version %s", plrOne.score, plrOne.curTurn, version);
 	for (int j = 1; j <= 15; j++) {
 		printf(" ");
 	}
@@ -225,7 +254,11 @@ void drawScreen(bool TType, char prompt[81], char strDisplay[2000])
 	else
 		Typewriter(myString);
 	printf("\n");
-
+	if (activeLocation.numObjects > 0) {
+		for (int j = 0; j < activeLocation.numObjects; ++j) {
+			printf("%s", activeLocation.Object[j].description[0]);
+		}
+	}
 	//display text complete, move to last line of the console (25)	
 	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 30);
 	//retVal = m2(0, 25);
@@ -355,6 +388,7 @@ int readVerbs(char* sentence, struct Location loc) {
 	int i, j, ctr, wordcnt = -1;
 
 	j = 0; ctr = 0;
+
 
 	for (i = 0; i <= (strlen(sentence)); i++)
 	{
